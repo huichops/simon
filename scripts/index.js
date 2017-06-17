@@ -4,6 +4,7 @@
  */
 
 // Game states
+import './../styles/index.scss';
 import constants from './constants';
 const { YELLOW, BLUE, RED, GREEN } = constants;
 const { START, ADDING, LOST, PLAYING } = constants;
