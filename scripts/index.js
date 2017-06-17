@@ -6,15 +6,28 @@
 // Game states
 import './../styles/index.scss';
 import constants from './constants';
+
 const { YELLOW, BLUE, RED, GREEN } = constants;
 const { START, ADDING, LOST, PLAYING } = constants;
 const colors = [RED, BLUE, YELLOW, GREEN];
 
 class Game {
-  constructor(uiHandler) {
+  constructor() {
     this.gameState = START;
-    this.uiHandler = uiHandler;
     this.sequence = [];
+    this.board = document.querySelector('.simon');
+    this.redButton = document.getElementById('button-red');
+    this.blueButton = document.getElementById('button-blue');
+    this.yellowButton = document.getElementById('button-red');
+    this.greenButton = document.getElementById('button-green');
+    this.buttons = new Map();
+    this.buttons.set(RED, this.redButton);
+    this.buttons.set(BLUE, this.blueButton);
+    this.buttons.set(YELLOW, this.yellowButton);
+    this.buttons.set(GREEN, this.greenButton);
+
+    this.setHandlers();
+
   }
 
   getRandomColor() {
@@ -26,7 +39,7 @@ class Game {
     if (this.gameState != ADDING)
       throw new Error(`Invalid game action for state ${this.gameState}`);
     this.sequence.push(this.getRandomColor());
-    this.uiHandler.lightSequence(this.sequence, this.startTurn);
+    this.lightSequence(this.sequence, this.startTurn.bind(this));
   }
 
   start() {
@@ -35,28 +48,20 @@ class Game {
     this.sequence.push(this.getRandomColor());
     this.sequence.push(this.getRandomColor());
     this.sequence.push(this.getRandomColor());
-    this.uiHandler.lightSequence(this.sequence, this.startTurn);
+    this.lightSequence(this.sequence, this.startTurn.bind(this));
   }
 
   startTurn() {
     this.gameState = PLAYING;
     this.sequenceIndex = 0;
   }
-}
 
-class UIHandler {
-  constructor() {
-    this.redButton = document.getElementById('button-red');
-    this.blueButton = document.getElementById('button-blue');
-    this.yellowButton = document.getElementById('button-red');
-    this.greenButton = document.getElementById('button-green');
-    this.buttons = new Map();
-    this.buttons.set(RED, this.redButton);
-    this.buttons.set(BLUE, this.blueButton);
-    this.buttons.set(YELLOW, this.yellowButton);
-    this.buttons.set(GREEN, this.greenButton);
+  setHandlers(sequence) {
+    this.board.addEventListener('click', (event) => {
+      console.log('event', event.target.id);
+    });
   }
-  
+
   lightSequence(sequence, cb) {
     sequence.reduce((p, s) => {
       return p.then(() => new Promise((resolve) => {
@@ -69,7 +74,8 @@ class UIHandler {
           resolve(this.turn(s));
         }, 500);
       }))
-    }, Promise.resolve());
+    }, Promise.resolve())
+    .then(cb);
   }
 
   turn(color) {
@@ -78,8 +84,8 @@ class UIHandler {
   }
 }
 
-const uiHandler = new UIHandler();
-const game = new Game(uiHandler);
+const game = new Game();
 console.log(game);
 game.start();
 console.log(game);
+

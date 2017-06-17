@@ -3,8 +3,8 @@ export default {
   LOST: Symbol('lost'),
   PLAYING: Symbol('playing'),
   ADDING: Symbol('adding'),
-  RED: Symbol('red'),
-  BLUE: Symbol('blue'),
-  GREEN: Symbol('green'),
-  YELOW: Symbol('yellow'),
+  RED: 'button-red',
+  BLUE: 'button-blue',
+  GREEN: 'button-green',
+  YELOW: 'button-yellow'
 };
