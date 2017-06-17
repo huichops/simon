@@ -8,13 +8,14 @@ import './../styles/index.scss';
 import constants from './constants';
 
 const { YELLOW, BLUE, RED, GREEN } = constants;
-const { START, ADDING, LOST, PLAYING } = constants;
+const { BLINK, ADDING, LOST, PLAYING } = constants;
 const colors = [RED, BLUE, YELLOW, GREEN];
 
 class Game {
   constructor() {
-    this.gameState = START;
+    this.gameState = BLINK;
     this.sequence = [];
+    this.sequenceIndex = 0;
     this.board = document.querySelector('.simon');
     this.redButton = document.getElementById('button-red');
     this.blueButton = document.getElementById('button-blue');
@@ -27,7 +28,6 @@ class Game {
     this.buttons.set(GREEN, this.greenButton);
 
     this.setHandlers();
-
   }
 
   getRandomColor() {
@@ -36,14 +36,14 @@ class Game {
   }
 
   addNew() {
-    if (this.gameState != ADDING)
+    if (this.gameState != BLINK)
       throw new Error(`Invalid game action for state ${this.gameState}`);
     this.sequence.push(this.getRandomColor());
     this.lightSequence(this.sequence, this.startTurn.bind(this));
   }
 
   start() {
-    if (this.gameState != START)
+    if (this.gameState != BLINK)
       throw new Error(`Invalid game action for state ${this.gameState}`);
     this.sequence.push(this.getRandomColor());
     this.sequence.push(this.getRandomColor());
@@ -52,40 +52,35 @@ class Game {
   }
 
   startTurn() {
+    console.warn(this.sequence);
     this.gameState = PLAYING;
     this.sequenceIndex = 0;
   }
 
   setHandlers(sequence) {
     this.board.addEventListener('click', (event) => {
-      console.log('event', event.target.id);
+      if (this.sequence[this.sequenceIndex] !== event.target.id)
+        throw Error('ah se mamo');
+      this.sequenceIndex += 1;
     });
   }
 
   lightSequence(sequence, cb) {
     sequence.reduce((p, s) => {
       return p.then(() => new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(this.turn(s));
-        }, 500);
+        setTimeout(() => resolve(this.toggle(s)), 500);
       })
     ).then(() => new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(this.turn(s));
-        }, 500);
+        setTimeout(() => resolve(this.toggle(s)), 500);
       }))
     }, Promise.resolve())
     .then(cb);
   }
 
-  turn(color) {
-    console.log(this.buttons);
+  toggle(color) {
     this.buttons.get(color).classList.toggle('lighted');
   }
 }
 
 const game = new Game();
-console.log(game);
 game.start();
-console.log(game);
-

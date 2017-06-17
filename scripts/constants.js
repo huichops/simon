@@ -1,8 +1,7 @@
 export default {
-  START: Symbol('start'),
+  BLINK: Symbol('blink'),
   LOST: Symbol('lost'),
   PLAYING: Symbol('playing'),
-  ADDING: Symbol('adding'),
   RED: 'button-red',
   BLUE: 'button-blue',
   GREEN: 'button-green',
