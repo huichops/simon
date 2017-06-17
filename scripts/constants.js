@@ -5,5 +5,5 @@ export default {
   RED: 'button-red',
   BLUE: 'button-blue',
   GREEN: 'button-green',
-  YELOW: 'button-yellow'
+  YELLOW: 'button-yellow'
 };

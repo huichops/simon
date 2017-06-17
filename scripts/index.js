@@ -52,7 +52,6 @@ class Game {
   }
 
   startTurn() {
-    console.warn(this.sequence);
     this.gameState = PLAYING;
     this.sequenceIndex = 0;
   }
