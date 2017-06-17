@@ -36,8 +36,7 @@ class Game {
   }
 
   addNew() {
-    if (this.gameState != BLINK)
-      throw new Error(`Invalid game action for state ${this.gameState}`);
+    this.sequenceIndex = 0;
     this.sequence.push(this.getRandomColor());
     this.lightSequence(this.sequence, this.startTurn.bind(this));
   }
@@ -45,9 +44,9 @@ class Game {
   start() {
     if (this.gameState != BLINK)
       throw new Error(`Invalid game action for state ${this.gameState}`);
-    this.sequence.push(this.getRandomColor());
-    this.sequence.push(this.getRandomColor());
-    this.sequence.push(this.getRandomColor());
+    this.sequence.unshift(this.getRandomColor());
+    this.sequence.unshift(this.getRandomColor());
+    this.sequence.unshift(this.getRandomColor());
     this.lightSequence(this.sequence, this.startTurn.bind(this));
   }
 
@@ -58,10 +57,18 @@ class Game {
 
   setHandlers(sequence) {
     this.board.addEventListener('click', (event) => {
-      if (this.sequence[this.sequenceIndex] !== event.target.id)
-        throw Error('ah se mamo');
+      const colorClicked = event.target.id;
+      const expectedColor = this.sequence[this.sequenceIndex];
+
+      if (colorClicked === expectedColor) throw Error('ah se mamo');
+      if (this.isLastSequenceColor()) return this.addNew();
+
       this.sequenceIndex += 1;
     });
+  }
+
+  isLastSequenceColor() {
+    return this.sequenceIndex === this.sequence.length - 1;
   }
 
   lightSequence(sequence, cb) {
