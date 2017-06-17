@@ -1,0 +1,40 @@
+/**
+ * index.scss
+ * - Add any styles you want here!
+ */
+
+body {
+  background: #f5f5f5;
+}
+
+.simon {
+  background-color: black;
+  width: 300px;
+  height: 300px;
+  margin: auto;
+  margin-top: 50px;
+}
+
+.button {
+  opacity: 0.5;
+  width: 115px;
+  height: 115px;
+  margin: 15px;
+  display: inline-block;
+  &.lighted {
+    opacity: 1;
+  }
+}
+
+#button-red {
+  background-color: red;
+}
+#button-yellow {
+  background-color: yellow;
+}
+#button-blue {
+  background-color: blue;
+}
+#button-green {
+  background-color: green;
+}
