@@ -11,23 +11,38 @@ const { YELLOW, BLUE, RED, GREEN } = constants;
 const { BLINK, ADDING, LOST, PLAYING } = constants;
 const colors = [RED, BLUE, YELLOW, GREEN];
 
-class Game {
-  constructor() {
-    this.gameState = BLINK;
-    this.sequence = [];
-    this.sequenceIndex = 0;
+class Board {
+  constructor(onColorClick) {
     this.board = document.querySelector('.simon');
     this.redButton = document.getElementById('button-red');
     this.blueButton = document.getElementById('button-blue');
     this.yellowButton = document.getElementById('button-yellow');
     this.greenButton = document.getElementById('button-green');
+
     this.buttons = new Map();
     this.buttons.set(RED, this.redButton);
     this.buttons.set(BLUE, this.blueButton);
     this.buttons.set(YELLOW, this.yellowButton);
     this.buttons.set(GREEN, this.greenButton);
 
-    this.setHandlers();
+    this.board.addEventListener('click', onColorClick);
+  }
+
+  toggle(color) {
+    this.buttons.get(color).classList.toggle('lighted');
+  }
+}
+
+class Game {
+  constructor() {
+    this.sequence = [
+      this.getRandomColor(),
+      this.getRandomColor(),
+      this.getRandomColor()
+    ];
+    this.board = new Board(this.onColorClick.bind(this));
+    this.sequenceIndex = 0;
+    this.gameState = BLINK;
   }
 
   getRandomColor() {
@@ -44,11 +59,6 @@ class Game {
   start() {
     if (this.gameState != BLINK)
       throw new Error(`Invalid game action for state ${this.gameState}`);
-    this.sequence = [
-      this.getRandomColor(),
-      this.getRandomColor(),
-      this.getRandomColor()
-    ];
     this.lightSequence(this.sequence, this.startTurn.bind(this));
   }
 
@@ -57,16 +67,14 @@ class Game {
     this.sequenceIndex = 0;
   }
 
-  setHandlers(sequence) {
-    this.board.addEventListener('click', (event) => {
-      const colorClicked = event.target.id;
-      const expectedColor = this.sequence[this.sequenceIndex];
+  onColorClick(event) {
+    const clickedColor = event.target.id;
+    const expectedColor = this.sequence[this.sequenceIndex];
 
-      if (colorClicked !== expectedColor) throw Error('Color doesnt match');
-      if (this.isLastSequenceColor()) return this.addNew();
+    if (clickedColor !== expectedColor) throw Error('Color doesnt match');
+    if (this.isLastSequenceColor()) return this.addNew();
 
-      this.sequenceIndex += 1;
-    });
+    this.sequenceIndex += 1;
   }
 
   isLastSequenceColor() {
@@ -74,19 +82,19 @@ class Game {
   }
 
   lightSequence(sequence, cb) {
-    sequence.reduce((p, s) => {
+    sequence.reduce((p, color) => {
       return p.then(() => new Promise((resolve) => {
-        setTimeout(() => resolve(this.toggle(s)), 500);
+        setTimeout(() => resolve(this.toggle(color)), 500);
       })
     ).then(() => new Promise((resolve) => {
-        setTimeout(() => resolve(this.toggle(s)), 500);
+        setTimeout(() => resolve(this.toggle(color)), 500);
       }))
     }, Promise.resolve())
     .then(cb);
   }
 
   toggle(color) {
-    this.buttons.get(color).classList.toggle('lighted');
+    this.board.toggle(color);
   }
 }
 
