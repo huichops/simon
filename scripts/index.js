@@ -28,6 +28,18 @@ class Board {
     this.board.addEventListener('click', onColorClick);
   }
 
+  showLightSequence(sequence, cb) {
+    sequence.reduce((p, color) => {
+      return p.then(() => new Promise((resolve) => {
+        setTimeout(() => resolve(this.toggle(color)), 500);
+      })
+    ).then(() => new Promise((resolve) => {
+        setTimeout(() => resolve(this.toggle(color)), 500);
+      }))
+    }, Promise.resolve())
+    .then(cb);
+  }
+
   toggle(color) {
     this.buttons.get(color).classList.toggle('lighted');
   }
@@ -35,13 +47,7 @@ class Board {
 
 class Game {
   constructor() {
-    this.sequence = [
-      this.getRandomColor(),
-      this.getRandomColor(),
-      this.getRandomColor()
-    ];
     this.board = new Board(this.onColorClick.bind(this));
-    this.sequenceIndex = 0;
     this.gameState = BLINK;
   }
 
@@ -53,13 +59,18 @@ class Game {
   addNew() {
     this.sequenceIndex = 0;
     this.sequence.push(this.getRandomColor());
-    this.lightSequence(this.sequence, this.startTurn.bind(this));
+    this.board.showLightSequence(this.sequence, this.startTurn.bind(this));
   }
 
   start() {
-    if (this.gameState != BLINK)
-      throw new Error(`Invalid game action for state ${this.gameState}`);
-    this.lightSequence(this.sequence, this.startTurn.bind(this));
+    if (this.gameState != BLINK) throw new Error(`Invalid game action for state ${this.gameState}`);
+    this.sequenceIndex = 0;
+    this.sequence = [
+      this.getRandomColor(),
+      this.getRandomColor(),
+      this.getRandomColor()
+    ];
+    this.board.showLightSequence(this.sequence, this.startTurn.bind(this));
   }
 
   startTurn() {
@@ -79,22 +90,6 @@ class Game {
 
   isLastSequenceColor() {
     return this.sequenceIndex === this.sequence.length - 1;
-  }
-
-  lightSequence(sequence, cb) {
-    sequence.reduce((p, color) => {
-      return p.then(() => new Promise((resolve) => {
-        setTimeout(() => resolve(this.toggle(color)), 500);
-      })
-    ).then(() => new Promise((resolve) => {
-        setTimeout(() => resolve(this.toggle(color)), 500);
-      }))
-    }, Promise.resolve())
-    .then(cb);
-  }
-
-  toggle(color) {
-    this.board.toggle(color);
   }
 }
 
