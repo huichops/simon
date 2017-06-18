@@ -19,7 +19,7 @@ class Game {
     this.board = document.querySelector('.simon');
     this.redButton = document.getElementById('button-red');
     this.blueButton = document.getElementById('button-blue');
-    this.yellowButton = document.getElementById('button-red');
+    this.yellowButton = document.getElementById('button-yellow');
     this.greenButton = document.getElementById('button-green');
     this.buttons = new Map();
     this.buttons.set(RED, this.redButton);
@@ -44,9 +44,11 @@ class Game {
   start() {
     if (this.gameState != BLINK)
       throw new Error(`Invalid game action for state ${this.gameState}`);
-    this.sequence.unshift(this.getRandomColor());
-    this.sequence.unshift(this.getRandomColor());
-    this.sequence.unshift(this.getRandomColor());
+    this.sequence = [
+      this.getRandomColor(),
+      this.getRandomColor(),
+      this.getRandomColor()
+    ];
     this.lightSequence(this.sequence, this.startTurn.bind(this));
   }
 
@@ -60,7 +62,7 @@ class Game {
       const colorClicked = event.target.id;
       const expectedColor = this.sequence[this.sequenceIndex];
 
-      if (colorClicked === expectedColor) throw Error('ah se mamo');
+      if (colorClicked !== expectedColor) throw Error('Color doesnt match');
       if (this.isLastSequenceColor()) return this.addNew();
 
       this.sequenceIndex += 1;
