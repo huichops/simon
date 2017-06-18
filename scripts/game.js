@@ -9,7 +9,7 @@ const colors = [RED, BLUE, YELLOW, GREEN];
 class Game {
   constructor() {
     this.board = new Board(this.onColorClick.bind(this));
-    this.gameState = BLINK;
+    this.status = BLINK;
   }
 
   getRandomColor() {
@@ -24,7 +24,7 @@ class Game {
   }
 
   start() {
-    if (this.gameState != BLINK) throw new Error(`Invalid game action for state ${this.gameState}`);
+    if (this.status != BLINK) throw new Error(`Invalid game action for state ${this.status}`);
     this.sequenceIndex = 0;
     this.sequence = [
       this.getRandomColor(),
@@ -35,7 +35,7 @@ class Game {
   }
 
   startTurn() {
-    this.gameState = PLAYING;
+    this.status = PLAYING;
   }
 
   onColorClick(event) {

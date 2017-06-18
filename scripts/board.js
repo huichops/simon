@@ -21,28 +21,22 @@ class Board {
 
   showLightSequence(sequence, cb) {
     sequence.reduce((p, color) => {
-      return p.then(() => this.turnOnColor(color))
-        .then(() => this.turnOffColor(color))
+      return p.then(() => this.setLighted(color))
+        .then(() => this.unsetLighted(color))
     }, Promise.resolve())
     .then(cb);
   }
 
-  turnOnColor(color) {
-    return this.toggle(color);
-  }
-
-  turnOffColor(color) {
-    return this.toggle(color);
-  }
-
-  toggle(color) {
+  setLighted(color) {
     return new Promise((resolve) => {
-      setTimeout(() => resolve(this.toggleLightedClass(color)), 500);
+      setTimeout(() => resolve(this.buttons.get(color).classList.add('lighted')), 500);
     });
   }
 
-  toggleLightedClass(color) {
-    this.buttons.get(color).classList.toggle('lighted');
+  unsetLighted(color) {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(this.buttons.get(color).classList.remove('lighted')), 500);
+    });
   }
 }
 
