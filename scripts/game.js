@@ -8,8 +8,7 @@ const { YELLOW, BLUE, RED, GREEN } = constants;
 const colors = [RED, BLUE, YELLOW, GREEN];
 
 class Game {
-  constructor(args) {
-    const { Board } = args;
+  constructor({ Board }) {
     this.board = new BoardHandler({
       board: new Board(this.onColorClick.bind(this))
     });
