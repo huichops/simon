@@ -46,13 +46,13 @@ class Game {
 
   increaseScore() {
     this.score += 1;
-    this.board.setScore(this.score);
+    this.boardHandler.setScore(this.score);
   }
 
   resetGame() {
     this.status = BLINK;
     this.score = 0;
-    this.board.setScore(this.score);
+    this.boardHandler.setScore(this.score);
     this.start();
   }
 

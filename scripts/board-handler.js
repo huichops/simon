@@ -27,6 +27,10 @@ class BoardHandler {
       setTimeout(() => resolve(this.audioHandler.playNote(color)), 100);
     });
   }
+
+  setScore(score) {
+    this.board.setScore(score);
+  }
 }
 
 export default BoardHandler;
