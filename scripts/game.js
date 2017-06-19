@@ -1,5 +1,6 @@
 import Board from './board';
 import AudioHandler from './audio-handler';
+import BoardHandler from './board-handler';
 import constants from './constants';
 
 const { BLINK, ADDING, LOST, PLAYING } = constants;
@@ -8,9 +9,12 @@ const { YELLOW, BLUE, RED, GREEN } = constants;
 const colors = [RED, BLUE, YELLOW, GREEN];
 
 class Game {
-  constructor() {
-    this.audioHandler = new AudioHandler();
-    this.board = new Board(this.audioHandler, this.onColorClick.bind(this));
+  constructor(args) {
+    const { board } = args; 
+    this.board = new BoardHandler({
+      onColorClick: this.onColorClick.bind(this),
+      graphicBoard: board
+    });
     this.status = BLINK;
   }
 
