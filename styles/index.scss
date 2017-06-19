@@ -26,6 +26,11 @@ body {
   }
 }
 
+.button:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
 #button-red {
   background-color: red;
 }
