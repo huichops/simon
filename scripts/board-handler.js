@@ -1,27 +1,30 @@
+import AudioHandler from './audio-handler';
 import constants from './constants';
 
 const { YELLOW, BLUE, RED, GREEN } = constants;
 
 class BoardHandler {
-  constructor(args) {
-    const { onColorClick, graphicBoard } = args;
-
-    this.board = graphicBoard;
-    this.buttons = new Map();
-    this.buttons.set(RED, this.redButton);
-    this.buttons.set(BLUE, this.blueButton);
-    this.buttons.set(YELLOW, this.yellowButton);
-    this.buttons.set(GREEN, this.greenButton);
-
-    this.board.setHandlers(onColorClick);
+  constructor({ board }) {
+    this.board = board;
+    this.audioHandler = new AudioHandler();
   }
 
-  showLightSequence() {
+  getClickedColor(event) {
+    return this.board.getClickedColor(event);
+  }
+
+  showLightSequence(sequence, cb) {
     sequence.reduce((p, color) => {
       return p.then(() => this.board.setLighted(color))
         .then(() => this.board.unsetLighted(color))
     }, Promise.resolve())
     .then(cb);
+  }
+
+  playSound(color) {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(this.audioHandler.playNote(color)), 100);
+    });
   }
 }
 

@@ -1,6 +1,6 @@
 import './../styles/index.scss';
 import Game from './game';
-import Board from './board';
+import HtmlBoard from './board';
 
-const game = new Game({ board: new Board() });
+const game = new Game({ Board: HtmlBoard });
 game.start();

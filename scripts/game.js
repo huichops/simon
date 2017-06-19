@@ -1,5 +1,4 @@
 import Board from './board';
-import AudioHandler from './audio-handler';
 import BoardHandler from './board-handler';
 import constants from './constants';
 
@@ -10,10 +9,9 @@ const colors = [RED, BLUE, YELLOW, GREEN];
 
 class Game {
   constructor(args) {
-    const { board } = args; 
+    const { Board } = args;
     this.board = new BoardHandler({
-      onColorClick: this.onColorClick.bind(this),
-      graphicBoard: board
+      board: new Board(this.onColorClick.bind(this))
     });
     this.status = BLINK;
   }
@@ -45,7 +43,7 @@ class Game {
   }
 
   onColorClick(event) {
-    const clickedColor = event.target.id;
+    const clickedColor = this.board.getClickedColor(event);
     const expectedColor = this.sequence[this.sequenceIndex];
 
     if (clickedColor !== expectedColor) throw Error('Color doesnt match');
