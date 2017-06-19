@@ -49,7 +49,7 @@ class Board {
   }
 
   setScore(score) {
-    this.score.innerText =  `Tu puntuacion actual es: ${score}`;
+    this.score.innerText = score;
   }
 }
 
