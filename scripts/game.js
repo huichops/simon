@@ -48,12 +48,22 @@ class Game {
     this.board.setScore(this.score);
   }
 
+  resetGame() {
+    this.status = BLINK;
+    this.score = 0;
+    this.board.setScore(this.score);
+    this.start();
+  }
+
   onColorClick(event) {
     const clickedColor = event.target.id;
     const expectedColor = this.sequence[this.sequenceIndex];
 
     if (this.status !== PLAYING) throw Error('Not in playing status');
-    if (clickedColor !== expectedColor) throw Error('Color doesnt match');
+    if (clickedColor !== expectedColor) {
+      this.resetGame();
+      throw Error('Color doesnt match');
+    }
     this.increaseScore();
     if (this.isLastSequenceColor()) return this.addNew();
 
