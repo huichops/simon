@@ -3,13 +3,14 @@ import constants from './constants';
 const { YELLOW, BLUE, RED, GREEN } = constants;
 
 class Board {
-  constructor(onColorClick) {
+  constructor(audioHandler, onColorClick) {
     this.board = document.querySelector('.simon');
     this.redButton = document.getElementById('button-red');
     this.blueButton = document.getElementById('button-blue');
     this.yellowButton = document.getElementById('button-yellow');
     this.greenButton = document.getElementById('button-green');
 
+    this.audioHandler = audioHandler;
     this.buttons = new Map();
     this.buttons.set(RED, this.redButton);
     this.buttons.set(BLUE, this.blueButton);
@@ -21,15 +22,22 @@ class Board {
 
   showLightSequence(sequence, cb) {
     sequence.reduce((p, color) => {
-      return p.then(() => this.setLighted(color))
-        .then(() => this.unsetLighted(color))
+      return p.then(() => this.playSound(color))
+        .then(() => this.setLighted(color))
+        .then(() => this.unsetLighted(color));
     }, Promise.resolve())
     .then(cb);
   }
 
+  playSound(color) {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(this.audioHandler.playNote(color)), 100);
+    });
+  }
+
   setLighted(color) {
     return new Promise((resolve) => {
-      setTimeout(() => resolve(this.buttons.get(color).classList.add('lighted')), 500);
+      setTimeout(() => resolve(this.buttons.get(color).classList.add('lighted')), 100);
     });
   }
 
