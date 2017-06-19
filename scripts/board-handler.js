@@ -15,7 +15,8 @@ class BoardHandler {
 
   showLightSequence(sequence, cb) {
     sequence.reduce((p, color) => {
-      return p.then(() => this.board.setLighted(color))
+      return p.then(() => this.playSound(color))
+        .then(() => this.board.setLighted(color))
         .then(() => this.board.unsetLighted(color))
     }, Promise.resolve())
     .then(cb);
