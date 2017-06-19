@@ -1,12 +1,13 @@
 import constants from './constants';
 
 const { YELLOW, BLUE, RED, GREEN } = constants;
+const { DO, FA, SI, MI } = constants;
 const WAVE_TYPE = 'square';
-const notes = {
-  [RED]: 261.63,
-  [BLUE]: 349.23,
-  [YELLOW]: 493.88,
-  [GREEN]: 659.26
+const soundFrequencies = {
+  [RED]: DO,
+  [BLUE]: FA,
+  [YELLOW]: SI,
+  [GREEN]: MI
 };
 
 export default class AudioHandler {
@@ -29,7 +30,7 @@ export default class AudioHandler {
     const oscillator = this.context.createOscillator();
 
     oscillator.type = this.oscillatorType;
-    oscillator.frequency.value = notes[color];
+    oscillator.frequency.value = soundFrequencies[color];
     oscillator.connect(this.volume);
     return oscillator;
   }
