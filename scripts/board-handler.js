@@ -16,10 +16,13 @@ class BoardHandler {
     this.board.setHandlers(onColorClick);
   }
 
-  showLightSequence(sequence, cb) {
-    this.board.showLightSequence(sequence, cb);
+  showLightSequence() {
+    sequence.reduce((p, color) => {
+      return p.then(() => this.board.setLighted(color))
+        .then(() => this.board.unsetLighted(color))
+    }, Promise.resolve())
+    .then(cb);
   }
-
 }
 
 export default BoardHandler;
