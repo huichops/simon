@@ -9,7 +9,7 @@ const colors = [RED, BLUE, YELLOW, GREEN];
 
 class Game {
   constructor({ Board }) {
-    this.board = new BoardHandler({
+    this.boardHandler = new BoardHandler({
       board: new Board(this.onColorClick.bind(this))
     });
     this.status = BLINK;
@@ -23,7 +23,7 @@ class Game {
   addNew() {
     this.sequenceIndex = 0;
     this.sequence.push(this.getRandomColor());
-    this.board.showLightSequence(this.sequence, this.startTurn.bind(this));
+    this.boardHandler.showLightSequence(this.sequence, this.startTurn.bind(this));
   }
 
   start() {
@@ -34,7 +34,7 @@ class Game {
       this.getRandomColor(),
       this.getRandomColor()
     ];
-    this.board.showLightSequence(this.sequence, this.startTurn.bind(this));
+    this.boardHandler.showLightSequence(this.sequence, this.startTurn.bind(this));
   }
 
   startTurn() {
@@ -42,7 +42,7 @@ class Game {
   }
 
   onColorClick(event) {
-    const clickedColor = this.board.getClickedColor(event);
+    const clickedColor = this.boardHandler.getClickedColor(event);
     const expectedColor = this.sequence[this.sequenceIndex];
 
     if (clickedColor !== expectedColor) throw Error('Color doesnt match');
