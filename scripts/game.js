@@ -43,13 +43,18 @@ class Game {
     this.status = PLAYING;
   }
 
+  increaseScore() {
+    this.score += 1;
+    this.board.setScore(this.score);
+  }
+
   onColorClick(event) {
     const clickedColor = event.target.id;
     const expectedColor = this.sequence[this.sequenceIndex];
 
     if (this.status !== PLAYING) throw Error('Not in playing status');
     if (clickedColor !== expectedColor) throw Error('Color doesnt match');
-    this.board.setScore(this.score += 1);
+    this.increaseScore();
     if (this.isLastSequenceColor()) return this.addNew();
 
     this.sequenceIndex += 1;
