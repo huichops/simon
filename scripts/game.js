@@ -1,5 +1,5 @@
 import Board from './board';
-import AudioHandler from './audio-handler';
+import BoardHandler from './board-handler';
 import constants from './constants';
 
 const { BLINK, ADDING, LOST, PLAYING } = constants;
@@ -8,9 +8,10 @@ const { YELLOW, BLUE, RED, GREEN } = constants;
 const colors = [RED, BLUE, YELLOW, GREEN];
 
 class Game {
-  constructor() {
-    this.audioHandler = new AudioHandler();
-    this.board = new Board(this.audioHandler, this.onColorClick.bind(this));
+  constructor({ Board }) {
+    this.boardHandler = new BoardHandler({
+      board: new Board(this.onColorClick.bind(this))
+    });
     this.status = BLINK;
     this.score = 0;
     this.startTurn = this.startTurn.bind(this);
@@ -25,7 +26,7 @@ class Game {
     this.sequenceIndex = 0;
     this.sequence.push(this.getRandomColor());
     this.status = BLINK;
-    this.board.showLightSequence(this.sequence, this.startTurn);
+    this.boardHandler.showLightSequence(this.sequence, this.startTurn);
   }
 
   start() {
@@ -36,7 +37,7 @@ class Game {
       this.getRandomColor(),
       this.getRandomColor()
     ];
-    this.board.showLightSequence(this.sequence, this.startTurn);
+    this.boardHandler.showLightSequence(this.sequence, this.startTurn);
   }
 
   startTurn() {
@@ -56,7 +57,7 @@ class Game {
   }
 
   onColorClick(event) {
-    const clickedColor = event.target.id;
+    const clickedColor = this.boardHandler.getClickedColor(event);
     const expectedColor = this.sequence[this.sequenceIndex];
 
     if (this.status !== PLAYING) throw Error('Not in playing status');
