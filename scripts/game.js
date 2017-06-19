@@ -12,6 +12,8 @@ class Game {
     this.audioHandler = new AudioHandler();
     this.board = new Board(this.audioHandler, this.onColorClick.bind(this));
     this.status = BLINK;
+    this.score = 0;
+    this.startTurn = this.startTurn.bind(this);
   }
 
   getRandomColor() {
@@ -22,7 +24,8 @@ class Game {
   addNew() {
     this.sequenceIndex = 0;
     this.sequence.push(this.getRandomColor());
-    this.board.showLightSequence(this.sequence, this.startTurn.bind(this));
+    this.status = BLINK;
+    this.board.showLightSequence(this.sequence, this.startTurn);
   }
 
   start() {
@@ -33,7 +36,7 @@ class Game {
       this.getRandomColor(),
       this.getRandomColor()
     ];
-    this.board.showLightSequence(this.sequence, this.startTurn.bind(this));
+    this.board.showLightSequence(this.sequence, this.startTurn);
   }
 
   startTurn() {
@@ -44,7 +47,9 @@ class Game {
     const clickedColor = event.target.id;
     const expectedColor = this.sequence[this.sequenceIndex];
 
+    if (this.status !== PLAYING) throw Error('Not in playing status');
     if (clickedColor !== expectedColor) throw Error('Color doesnt match');
+    this.board.setScore(this.score += 1);
     if (this.isLastSequenceColor()) return this.addNew();
 
     this.sequenceIndex += 1;
