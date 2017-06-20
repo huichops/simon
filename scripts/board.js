@@ -30,7 +30,7 @@ class Board {
 
   unsetLighted(color) {
     return new Promise((resolve) => {
-      setTimeout(() => resolve(this.buttons.get(color).classList.remove('lighted')), 500);
+      setTimeout(() => resolve(this.buttons.get(color).classList.remove('lighted')), 300);
     });
   }
 }
