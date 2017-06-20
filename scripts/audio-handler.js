@@ -23,7 +23,7 @@ export default class AudioHandler {
     const oscillator = this.createNoteOscillator(color);
 
     oscillator.start(this.context.currentTime);
-    oscillator.stop(this.context.currentTime + 0.5);
+    oscillator.stop(this.context.currentTime + 0.3);
   }
 
   createNoteOscillator(color) {

@@ -42,13 +42,19 @@ class Game {
   }
 
   onColorClick(event) {
+    if (this.status !== PLAYING) return false;
     const clickedColor = this.boardHandler.getClickedColor(event);
     const expectedColor = this.sequence[this.sequenceIndex];
 
-    if (clickedColor !== expectedColor) throw Error('Color doesnt match');
-    if (this.isLastSequenceColor()) return this.addNew();
+    this.status = BLINK;
+    this.boardHandler.lightColor(clickedColor)
+      .then(() => {
+        if (clickedColor !== expectedColor) throw new Error('Color does not match');
+        if (this.isLastSequenceColor()) return this.addNew();
+        this.sequenceIndex += 1;
+        this.status = PLAYING;
+      });
 
-    this.sequenceIndex += 1;
   }
 
   isLastSequenceColor() {
