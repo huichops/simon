@@ -41,6 +41,11 @@ body {
   &.lighted {
     opacity: 1;
   }
+  cursor: pointer;
+}
+
+h2 {
+  text-align: center;
 }
 
 .button:hover {

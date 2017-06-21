@@ -13,6 +13,8 @@ class Game {
       board: new Board(this.onColorClick.bind(this))
     });
     this.status = BLINK;
+    this.score = 0;
+    this.startTurn = this.startTurn.bind(this);
   }
 
   getRandomColor() {
@@ -23,7 +25,8 @@ class Game {
   addNew() {
     this.sequenceIndex = 0;
     this.sequence.push(this.getRandomColor());
-    this.boardHandler.showLightSequence(this.sequence, this.startTurn.bind(this));
+    this.status = BLINK;
+    this.boardHandler.showLightSequence(this.sequence, this.startTurn);
   }
 
   start() {
@@ -34,18 +37,35 @@ class Game {
       this.getRandomColor(),
       this.getRandomColor()
     ];
-    this.boardHandler.showLightSequence(this.sequence, this.startTurn.bind(this));
+    this.boardHandler.showLightSequence(this.sequence, this.startTurn);
   }
 
   startTurn() {
     this.status = PLAYING;
   }
 
+  increaseScore() {
+    this.score += 1;
+    this.boardHandler.setScore(this.score);
+  }
+
+  resetGame() {
+    this.status = BLINK;
+    this.score = 0;
+    this.boardHandler.setScore(this.score);
+    this.start();
+  }
+
   onColorClick(event) {
     if (this.status !== PLAYING) return false;
     const clickedColor = this.boardHandler.getClickedColor(event);
     const expectedColor = this.sequence[this.sequenceIndex];
-
+    if (clickedColor !== expectedColor) {
+      this.resetGame();
+      throw Error('Color doesnt match');
+    }
+    this.increaseScore();
+    if (this.isLastSequenceColor()) return this.addNew();
     this.status = BLINK;
     this.boardHandler.lightColor(clickedColor)
       .then(() => {
