@@ -9,6 +9,7 @@ class Board {
     this.yellowButton = document.getElementById('button-yellow');
     this.greenButton = document.getElementById('button-green');
     this.score = document.getElementById('score');
+    this.hiScore = document.getElementById('hi-score');
 
     this.board.addEventListener('click', onColorClick);
 
@@ -37,6 +38,10 @@ class Board {
 
   setScore(score) {
     this.score.innerText = score;
+  }
+
+  setHiScore(hiScore) {
+    this.hiScore.innerText = hiScore;
   }
 }
 

@@ -34,8 +34,12 @@ class BoardHandler {
     });
   }
 
-  setScore(score) {
+  presentScore(score) {
     this.board.setScore(score);
+  }
+
+  presentHiScore(hiScore) {
+    this.board.setHiScore(hiScore);
   }
 }
 
