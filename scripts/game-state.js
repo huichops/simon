@@ -3,11 +3,24 @@ const { BLINK, ADDING, LOST, PLAYING } = constants;
 
 const validStatus= [ BLINK, ADDING, LOST, PLAYING ];
 
+const getInitialHiScore = () => {
+  if (window && window.localStorage) {
+    return localStorage.getItem('hiScore') || 0;
+  }
+  return 0;
+}
+
+const saveHiScore = (hiScore) => {
+  if (window && window.localStorage) {
+    localStorage.setItem('hiScore', hiScore);
+  }
+}
+
 class GameState {
   constructor() {
     this.status =  BLINK;
     this.score = 0;
-    this.hiScore = 0;
+    this.hiScore = getInitialHiScore();
   }
 
   changeStatus(status) {
@@ -18,7 +31,8 @@ class GameState {
 
   resetGame() {
     this.status = BLINK;
-    this.hiScore = this.score > this.hiScore ? this.score : this.hiScore;
+    this.hiScore = Math.max(this.score, this.hiScore);
+    saveHiScore(this.hiScore);
     this.score = 0;
   }
 

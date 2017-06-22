@@ -14,6 +14,7 @@ class Game {
       board: new Board(this.onColorClick.bind(this))
     });
     this.gameState = new GameState();
+    this.boardHandler.presentHiScore(this.gameState.getState().hiScore);
     this.startTurn = this.startTurn.bind(this);
   }
 
