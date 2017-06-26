@@ -20,7 +20,7 @@ test('Increase score on PLAYING status', () => {
   expect(state.getState().score).toBe(3);
 });
 
-test('Reset score should set hiScore', () => {
+test('Reset game should set hiScore', () => {
   const state = new GameState();
   state.changeStatus(PLAYING);
   increaseScore(state, 3);
@@ -39,7 +39,7 @@ test('hiScore should be preserved', () => {
   expect(state.getState().hiScore).toBe(3);
 });
 
-test('hiScore should be preserved', () => {
+test('hiScore should be replaced by new hiscore', () => {
   const state = new GameState();
   state.changeStatus(PLAYING);
   increaseScore(state, 3);
