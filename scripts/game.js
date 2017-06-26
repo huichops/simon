@@ -63,22 +63,23 @@ class Game {
     if (status !== PLAYING) return false;
     const clickedColor = this.boardHandler.getClickedColor(event);
     const expectedColor = this.sequence[this.sequenceIndex];
-    if (clickedColor !== expectedColor) {
-      this.gameState.resetGame();
-      this.resetGame();
-      throw Error('Color doesnt match');
-    }
-    this.increaseScore();
-    if (this.isLastSequenceColor()) return this.addNew();
-    this.gameState.changeStatus(BLINK);
-    this.boardHandler.lightColor(clickedColor)
+    this.blinkClickedColor(clickedColor)
       .then(() => {
-        if (clickedColor !== expectedColor) throw new Error('Color does not match');
+        if (clickedColor !== expectedColor) {
+          this.gameState.resetGame();
+          this.resetGame();
+          throw new Error('Color does not match');
+        }
+        this.gameState.changeStatus(PLAYING);
+        this.increaseScore();
         if (this.isLastSequenceColor()) return this.addNew();
         this.sequenceIndex += 1;
-        this.gameState.changeStatus(PLAYING);
       });
+  }
 
+  blinkClickedColor(clickedColor) {
+    this.gameState.changeStatus(BLINK);
+    return this.boardHandler.lightColor(clickedColor);
   }
 
   isLastSequenceColor() {
