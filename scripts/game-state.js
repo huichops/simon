@@ -8,13 +8,13 @@ const getInitialHiScore = () => {
     return localStorage.getItem('hiScore') || 0;
   }
   return 0;
-}
+};
 
 const saveHiScore = (hiScore) => {
   if (window && window.localStorage) {
     localStorage.setItem('hiScore', hiScore);
   }
-}
+};
 
 class GameState {
   constructor() {

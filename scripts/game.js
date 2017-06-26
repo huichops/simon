@@ -11,7 +11,7 @@ const colors = [RED, BLUE, YELLOW, GREEN];
 class Game {
   constructor({ Board }) {
     this.boardHandler = new BoardHandler({
-      board: new Board(this.onColorClick.bind(this))
+      board: new Board(this.onColorClick.bind(this)),
     });
     this.gameState = new GameState();
     this.boardHandler.presentHiScore(this.gameState.getState().hiScore);
@@ -37,7 +37,7 @@ class Game {
     this.sequence = [
       this.getRandomColor(),
       this.getRandomColor(),
-      this.getRandomColor()
+      this.getRandomColor(),
     ];
     this.boardHandler.showLightSequence(this.sequence, this.startTurn);
   }

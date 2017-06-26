@@ -1,10 +1,11 @@
+/* global test, expect */
 import GameState from '../scripts/game-state';
 import constants from '../scripts/constants';
 
-const { BLINK, ADDING, LOST, PLAYING } = constants;
+const { PLAYING } = constants;
 
 const increaseScore = (state, times) => {
-  for(let i = 0; i < times; i += 1) state.increaseScore();
+  for (let i = 0; i < times; i += 1) state.increaseScore();
 };
 
 test('Try to increase score on BLINK status', () => {
