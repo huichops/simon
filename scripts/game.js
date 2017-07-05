@@ -1,5 +1,6 @@
 import Board from './board';
 import BoardHandler from './board-handler';
+import GameState from './game-state';
 import constants from './constants';
 
 const { BLINK, ADDING, LOST, PLAYING } = constants;
@@ -10,10 +11,10 @@ const colors = [RED, BLUE, YELLOW, GREEN];
 class Game {
   constructor({ Board }) {
     this.boardHandler = new BoardHandler({
-      board: new Board(this.onColorClick.bind(this))
+      board: new Board(this.onColorClick.bind(this)),
     });
-    this.status = BLINK;
-    this.score = 0;
+    this.gameState = new GameState();
+    this.boardHandler.presentHiScore(this.gameState.getState().hiScore);
     this.startTurn = this.startTurn.bind(this);
   }
 
@@ -25,56 +26,60 @@ class Game {
   addNew() {
     this.sequenceIndex = 0;
     this.sequence.push(this.getRandomColor());
-    this.status = BLINK;
+    this.gameState.changeStatus(BLINK);
     this.boardHandler.showLightSequence(this.sequence, this.startTurn);
   }
 
   start() {
-    if (this.status != BLINK) throw new Error(`Invalid game action for state ${this.status}`);
+    const { status } = this.gameState.getState();
+    if (status != BLINK) throw new Error(`Invalid game action for state ${this.status}`);
     this.sequenceIndex = 0;
     this.sequence = [
       this.getRandomColor(),
       this.getRandomColor(),
-      this.getRandomColor()
+      this.getRandomColor(),
     ];
     this.boardHandler.showLightSequence(this.sequence, this.startTurn);
   }
 
   startTurn() {
-    this.status = PLAYING;
+    this.gameState.changeStatus(PLAYING);
   }
 
   increaseScore() {
-    this.score += 1;
-    this.boardHandler.setScore(this.score);
+    this.gameState.increaseScore();
+    this.boardHandler.presentScore(this.gameState.getState().score);
   }
 
   resetGame() {
-    this.status = BLINK;
-    this.score = 0;
-    this.boardHandler.setScore(this.score);
+    const { score, hiScore } = this.gameState.getState();
+    this.boardHandler.presentScore(score);
+    this.boardHandler.presentHiScore(hiScore);
     this.start();
   }
 
   onColorClick(event) {
-    if (this.status !== PLAYING) return false;
+    const { status } = this.gameState.getState();
+    if (status !== PLAYING) return false;
     const clickedColor = this.boardHandler.getClickedColor(event);
     const expectedColor = this.sequence[this.sequenceIndex];
-    if (clickedColor !== expectedColor) {
-      this.resetGame();
-      throw Error('Color doesnt match');
-    }
-    this.increaseScore();
-    if (this.isLastSequenceColor()) return this.addNew();
-    this.status = BLINK;
-    this.boardHandler.lightColor(clickedColor)
+    this.blinkClickedColor(clickedColor)
       .then(() => {
-        if (clickedColor !== expectedColor) throw new Error('Color does not match');
+        if (clickedColor !== expectedColor) {
+          this.gameState.resetGame();
+          this.resetGame();
+          throw new Error('Color does not match');
+        }
+        this.gameState.changeStatus(PLAYING);
+        this.increaseScore();
         if (this.isLastSequenceColor()) return this.addNew();
         this.sequenceIndex += 1;
-        this.status = PLAYING;
       });
+  }
 
+  blinkClickedColor(clickedColor) {
+    this.gameState.changeStatus(BLINK);
+    return this.boardHandler.lightColor(clickedColor);
   }
 
   isLastSequenceColor() {

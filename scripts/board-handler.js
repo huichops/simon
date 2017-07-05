@@ -1,7 +1,4 @@
 import AudioHandler from './audio-handler';
-import constants from './constants';
-
-const { YELLOW, BLUE, RED, GREEN } = constants;
 
 class BoardHandler {
   constructor({ board }) {
@@ -17,9 +14,9 @@ class BoardHandler {
     sequence.reduce((p, color) => {
       return p.then(() => this.playSound(color))
         .then(() => this.board.setLighted(color))
-        .then(() => this.board.unsetLighted(color))
+        .then(() => this.board.unsetLighted(color));
     }, Promise.resolve())
-    .then(cb);
+      .then(cb);
   }
 
   lightColor(color) {
@@ -34,8 +31,12 @@ class BoardHandler {
     });
   }
 
-  setScore(score) {
+  presentScore(score) {
     this.board.setScore(score);
+  }
+
+  presentHiScore(hiScore) {
+    this.board.setHiScore(hiScore);
   }
 }
 

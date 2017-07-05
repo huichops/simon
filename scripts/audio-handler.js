@@ -7,7 +7,7 @@ const soundFrequencies = {
   [RED]: DO,
   [BLUE]: FA,
   [YELLOW]: SI,
-  [GREEN]: MI
+  [GREEN]: MI,
 };
 
 export default class AudioHandler {
